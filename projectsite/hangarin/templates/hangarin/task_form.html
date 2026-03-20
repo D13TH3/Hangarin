@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Add New Task — Hangarin{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8"> <!-- Widened slightly to fit the subtask row -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-4"><i class="fa-solid fa-plus-circle text-primary me-2"></i>Add New Task</h2>
+                
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Main Task Fields -->
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label fw-bold small text-uppercase text-muted">{{ field.label }}</label>
+                        {% render_field field class+="form-control" %}
+                        {% if field.errors %}
+                        <div class="invalid-feedback d-block">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <!-- Subtask Section -->
+                    <div class="mt-5 mb-4">
+                        <h5 class="h6 text-uppercase fw-bold text-primary mb-3">
+                            <i class="fa-solid fa-list-check me-2"></i>Add Subtasks (Optional)
+                        </h5>
+                        <hr class="text-muted opacity-25">
+                        
+                        {{ subtasks.management_form }} <!-- CRITICAL: Hidden fields for Django -->
+                        
+                        <div id="subtask-form-container">
+                            {% for sub_form in subtasks %}
+                            <div class="row g-2 mb-3 align-items-center subtask-form-row">
+                                <div class="col-md-8">
+                                    <label class="small text-muted mb-1">Subtask Title</label>
+                                    {% render_field sub_form.title class+="form-control form-control-sm" placeholder="e.g., Draft introduction" %}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="small text-muted mb-1">Status</label>
+                                    {% render_field sub_form.status class+="form-select form-select-sm" %}
+                                </div>
+                                <!-- Hidden ID fields for existing subtasks -->
+                                {% for hidden in sub_form.hidden_fields %}{{ hidden }}{% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- NEW: Notes Section -->
+                    <div class="mt-4 mb-4">
+                        <h5 class="h6 text-uppercase fw-bold text-warning mb-3">
+                            <i class="fa-solid fa-note-sticky me-2"></i>Additional Notes
+                        </h5>
+                        <hr class="text-muted opacity-25">
+                        
+                        {{ notes.management_form }} <!-- Management form for Notes -->
+                        
+                        <div id="notes-form-container">
+                            {% for n_form in notes %}
+                            <div class="mb-3">
+                                <label class="small text-muted mb-1">Content</label>
+                                {% render_field n_form.content class+="form-control" placeholder="Add specific details or links here..." rows="3" %}
+                                {% for hidden in n_form.hidden_fields %}{{ hidden }}{% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- Submit Buttons -->
+                    <div class="d-flex gap-2 border-top pt-4">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fa-solid fa-check-double me-1"></i>Create Task & Subtasks
+                        </button>
+                        <a href="{% url 'hangarin:dashboard' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

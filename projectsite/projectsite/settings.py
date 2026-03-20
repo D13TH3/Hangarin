@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-j8a^%ts4hbdq26b+oc!_!9h8abs06+d7ukpg84cwx_o8#m_6zx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] 
 
 
 # Application definition
@@ -37,8 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth_ui',
+    'allauth',
+    'slippers', 
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    'widget_tweaks',
     'hangarin',
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -46,8 +56,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'hangarin.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'projectsite.urls'
@@ -55,7 +67,7 @@ ROOT_URLCONF = 'projectsite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,9 +127,51 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+#STATIC_URL = 'static/'
+#STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
+#DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Auth redirects (for LoginRequiredMixin)
+#LOGIN_URL = "/accounts/login/"
+#LOGIN_REDIRECT_URL = "/"
+#LOGOUT_REDIRECT_URL = "/accounts/login/"
+
+# django-allauth
+#AUTHENTICATION_BACKENDS = [
+#    'django.contrib.auth.backends.ModelBackend',
+#    'allauth.account.auth_backends.AuthenticationBackend',
+#]
+#ACCOUNT_EMAIL_VERIFICATION = 'optional'
+#ACCOUNT_LOGIN_METHODS = {'username'}
+#SOCIALACCOUNT_AUTO_SIGNUP = True
+#SOCIALACCOUNT_QUERY_EMAIL = True
+#SOCIALACCOUNT_LOGIN_ON_GET = True      
+#ACCOUNT_LOGOUT_ON_GET = True    
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = (
+BASE_DIR / 'static',
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_URL = '/accounts/login/' # where @login_required will send users
+LOGIN_REDIRECT_URL = '/' # where to go after successful login
+LOGOUT_REDIRECT_URL = '/accounts/login/' # after logout, go back to login
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'  # after logout, show login page
+ACCOUNT_LOGOUT_ON_GET = False # logout immediately on GET
+ACCOUNT_LOGIN_METHODS = {"username", "email"} # allow login with username OR email
+ACCOUNT_SIGNUP_FIELDS = [
+"username*",
+"email*",
+"password1*",
+"password2*",
+]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # for testing, print emails to console

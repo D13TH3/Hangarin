@@ -1,0 +1,55 @@
+/* Hangarin custom styles */
+/* Add project-specific overrides here. */
+/* High-Contrast Professional Theme */
+:root {
+    --hangarin-dark: #b1b6bf;    /* Deep charcoal for text */
+    --hangarin-blue: #3182ce;    /* Clear primary blue */
+    --hangarin-bg: #274256;      /* Clean off-white background */
+}
+
+body {
+    background-color: var(--hangarin-bg);
+    color: var(--hangarin-dark);
+    font-family: 'Inter', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased; /* Fixes "blurry" fonts */
+}
+
+/* Fix Status Badges (High Contrast) */
+.status-completed { background-color: #c6f6d5; color: #22543d; font-weight: 600; padding: 0.4em 0.8em; border-radius: 6px; }
+.status-inprogress { background-color: #bee3f8; color: #2a4365; font-weight: 600; padding: 0.4em 0.8em; border-radius: 6px; }
+.status-pending { background-color: #fed7e2; color: #702459; font-weight: 600; padding: 0.4em 0.8em; border-radius: 6px; }
+
+/* Dashboard Tables */
+.table { background: rgb(80, 61, 61); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.table thead th { background-color: #edf2f7; color: #4a5568; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; border: none; }
+
+/* Progress Bar Visibility */
+.progress { background-color: #344040; height: 11px; border-radius: 6px; }
+
+/* Targets ONLY the card with the specific ID and its children */
+#main-task-card, 
+#main-task-card .table, 
+#main-task-card .table-responsive,
+#main-task-card .table > :not(caption) > * > * {
+    background-color: #86333a !important; /* Change this to your desired color */
+    color: #cebfbf !important;           /* Makes the text white for readability */
+    border: none !important;
+}
+
+/* Forces the table rows inside this card to match the background */
+#main-task-card .table tbody tr {
+    background-color: #2d3748 !important;
+}
+
+/* Optional: Change the header color of just this table */
+#main-task-card .table thead th {
+    background-color: #86333a !important;
+    color: #cbd5e0 !important;
+}
+
+/* This forces the numbers to ignore Bootstrap's opacity variables */
+.card h2 {
+    --bs-text-opacity: 1 !important; 
+    color: #000000 !important; 
+    opacity: 1 !important;
+}
