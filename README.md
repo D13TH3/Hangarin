@@ -20,16 +20,6 @@ Hangarin is a modern, high-contrast Task Management Dashboard built with **Djang
 
 ---
 
-## 🛠️ Tech Stack
-
-*   **Backend**: Django 5.x
-*   **Frontend**: Bootstrap 5, MDB (Material Design for Bootstrap), FontAwesome Icons
-*   **Database**: SQLite (Development)
-*   **Auth**: Django-allauth (OAuth2)
-*   **Fake Data**: Faker (for database population)
-
----
-
 ## 🚀 Getting Started
 
 Follow these steps to set up the project locally on your machine:
