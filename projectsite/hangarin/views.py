@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from datetime import timedelta
 from .models import Task, Category
 from .forms import TaskForm, SubTaskFormSet, NoteFormSet 
+from django.views.generic.edit import UpdateView
 
 class TaskDashboardView(LoginRequiredMixin, ListView):
     model = Task
@@ -81,3 +82,13 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
     success_url = reverse_lazy("hangarin:dashboard")
     template_name = "hangarin/task_confirm_delete.html"
+
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
+    model = Task
+    form_class = TaskForm
+    template_name = "hangarin/task_form.html"  # Reuses your creation template
+    success_url = reverse_lazy("hangarin:dashboard")
+
+    def get_queryset(self):
+        # Security: Users can only edit their own tasks
+        return Task.objects.filter(user=self.request.user)

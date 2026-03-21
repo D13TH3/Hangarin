@@ -104,7 +104,24 @@
                             {% endif %}
                         </td>
                         <td onclick="event.stopPropagation()">
-                            <button type="button" class="btn btn-sm btn-link text-danger p-0" data-bs-toggle="modal" data-bs-target="#deleteTaskModal" data-delete-url="{% url 'hangarin:task_delete' task.pk %}" title="Delete task"><i class="fa-solid fa-trash-alt"></i></button>
+                            <div class="d-flex gap-2 justify-content-end align-items-center">
+                               <!-- New Edit Button -->
+                                <a href="{% url 'hangarin:task_update' task.pk %}" 
+                                     class="btn btn-sm btn-link text-primary p-0" 
+                                     title="Edit task">
+                                      <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+        
+                               <!-- Existing Delete Button -->
+                               <button type="button" 
+                                      class="btn btn-sm btn-link text-danger p-0" 
+                                      data-bs-toggle="modal" 
+                                      data-bs-target="#deleteTaskModal" 
+                                      data-delete-url="{% url 'hangarin:task_delete' task.pk %}" 
+                                      title="Delete task">
+                                    <i class="fa-solid fa-trash-alt"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <tr class="collapse" id="task-{{ task.id }}">
