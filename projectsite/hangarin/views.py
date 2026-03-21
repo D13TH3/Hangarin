@@ -86,9 +86,35 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Task
     form_class = TaskForm
-    template_name = "hangarin/task_form.html"  # Reuses your creation template
+    template_name = "hangarin/task_form.html"
     success_url = reverse_lazy("hangarin:dashboard")
 
     def get_queryset(self):
-        # Security: Users can only edit their own tasks
         return Task.objects.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            # Re-bind POST data to the existing instance
+            data['subtasks'] = SubTaskFormSet(self.request.POST, instance=self.object)
+            data['notes'] = NoteFormSet(self.request.POST, instance=self.object)
+        else:
+            # Load existing data from the database into the forms
+            data['subtasks'] = SubTaskFormSet(instance=self.object)
+            data['notes'] = NoteFormSet(instance=self.object)
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        subtasks = context['subtasks']
+        notes = context['notes']
+        
+        # Validate and save everything together
+        if subtasks.is_valid() and notes.is_valid():
+            self.object = form.save()
+            subtasks.save()
+            notes.save()
+            return redirect(self.success_url)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+

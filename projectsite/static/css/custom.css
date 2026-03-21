@@ -53,3 +53,46 @@ body {
     color: #000000 !important; 
     opacity: 1 !important;
 }
+
+/* --- SMOOTH TRANSITION LOGIC --- */
+
+/* 1. Page Entrance Transition */
+body {
+    opacity: 0; /* Starts invisible to prevent "white flash" */
+    transition: opacity 0.4s ease-in-out;
+}
+
+body.page-loaded {
+    opacity: 1; /* Fades in once JS triggers */
+}
+
+/* 2. Table Row Hover & Click Smoothness */
+#main-task-card .table tbody tr {
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#main-task-card .table tbody tr:hover {
+    background-color: #3d4a5d !important; /* Slightly lighter than your row color */
+    cursor: pointer;
+}
+
+/* 3. Smooth Accordion (Collapse) Logic */
+.collapsing {
+    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 4. Subtasks & Notes Fade-in */
+.collapse.show {
+    animation: slideDownFade 0.4s ease forwards;
+}
+
+@keyframes slideDownFade {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 5. Icon Hover Effect */
+.fa-pen-to-square:hover, .fa-trash-alt:hover {
+    transform: scale(1.2);
+    transition: transform 0.2s ease;
+}

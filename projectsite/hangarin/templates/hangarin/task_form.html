@@ -1,13 +1,21 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
-{% block title %}Add New Task — Hangarin{% endblock %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Task — {{ form.instance.title }}{% else %}Add New Task — Hangarin{% endif %}
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-8"> <!-- Widened slightly to fit the subtask row -->
+    <div class="col-md-10 col-lg-8">
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4">
-                <h2 class="h4 mb-4"><i class="fa-solid fa-plus-circle text-primary me-2"></i>Add New Task</h2>
-                
+                <!-- Dynamic Header -->
+                <h2 class="h4 mb-4">
+                  <i class="fa-solid {% if form.instance.pk %}fa-pen-to-square{% else %}fa-plus-circle{% endif %} text-primary me-2"></i>
+                  {% if form.instance.pk %}Edit Task: {{ form.instance.title }}{% else %}Add New Task{% endif %}
+                </h2>
+
                 <form method="post" novalidate>
                     {% csrf_token %}
                     
@@ -25,53 +33,74 @@
                     <!-- Subtask Section -->
                     <div class="mt-5 mb-4">
                         <h5 class="h6 text-uppercase fw-bold text-primary mb-3">
-                            <i class="fa-solid fa-list-check me-2"></i>Add Subtasks (Optional)
+                            <i class="fa-solid fa-list-check me-2"></i>
+                            {% if form.instance.pk %}Edit Subtasks{% else %}Add Subtasks (Optional){% endif %}
                         </h5>
                         <hr class="text-muted opacity-25">
                         
-                        {{ subtasks.management_form }} <!-- CRITICAL: Hidden fields for Django -->
+                        {{ subtasks.management_form }}
                         
                         <div id="subtask-form-container">
                             {% for sub_form in subtasks %}
                             <div class="row g-2 mb-3 align-items-center subtask-form-row">
-                                <div class="col-md-8">
+                                <div class="col-md-7">
                                     <label class="small text-muted mb-1">Subtask Title</label>
                                     {% render_field sub_form.title class+="form-control form-control-sm" placeholder="e.g., Draft introduction" %}
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label class="small text-muted mb-1">Status</label>
                                     {% render_field sub_form.status class+="form-select form-select-sm" %}
                                 </div>
-                                <!-- Hidden ID fields for existing subtasks -->
+                                
+                                <!-- Delete Checkbox (Only shows for existing subtasks) -->
+                                <div class="col-md-2 text-center">
+                                    {% if sub_form.instance.pk %}
+                                        <label class="small text-danger d-block mb-1">Delete?</label>
+                                        {% render_field sub_form.DELETE class="form-check-input" %}
+                                    {% endif %}
+                                </div>
+
                                 {% for hidden in sub_form.hidden_fields %}{{ hidden }}{% endfor %}
                             </div>
                             {% endfor %}
                         </div>
                     </div>
                     
-                    <!-- NEW: Notes Section -->
+                    <!-- Notes Section -->
                     <div class="mt-4 mb-4">
                         <h5 class="h6 text-uppercase fw-bold text-warning mb-3">
-                            <i class="fa-solid fa-note-sticky me-2"></i>Additional Notes
+                            <i class="fa-solid fa-note-sticky me-2"></i>
+                            {% if form.instance.pk %}Edit Notes{% else %}Additional Notes{% endif %}
                         </h5>
                         <hr class="text-muted opacity-25">
                         
-                        {{ notes.management_form }} <!-- Management form for Notes -->
+                        {{ notes.management_form }}
                         
                         <div id="notes-form-container">
                             {% for n_form in notes %}
-                            <div class="mb-3">
+                            <div class="mb-3 p-3 border rounded bg-light position-relative">
                                 <label class="small text-muted mb-1">Content</label>
                                 {% render_field n_form.content class+="form-control" placeholder="Add specific details or links here..." rows="3" %}
+                                
+                                <!-- Delete Checkbox for Notes -->
+                                {% if n_form.instance.pk %}
+                                <div class="form-check mt-2">
+                                    {% render_field n_form.DELETE class="form-check-input" %}
+                                    <label class="form-check-label small text-danger">Remove this note</label>
+                                </div>
+                                {% endif %}
+
                                 {% for hidden in n_form.hidden_fields %}{{ hidden }}{% endfor %}
                             </div>
                             {% endfor %}
                         </div>
                     </div>
+
                     <!-- Submit Buttons -->
                     <div class="d-flex gap-2 border-top pt-4">
                         <button type="submit" class="btn btn-primary px-4">
-                            <i class="fa-solid fa-check-double me-1"></i>Create Task & Subtasks
+                            <i class="fa-solid fa-check-double me-1"></i>
+                            {% if form.instance.pk %}Save Changes{% else %}Create Task & Subtasks{% endif %}
                         </button>
                         <a href="{% url 'hangarin:dashboard' %}" class="btn btn-outline-secondary px-4">Cancel</a>
                     </div>
