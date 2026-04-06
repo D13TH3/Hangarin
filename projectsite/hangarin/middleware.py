@@ -15,6 +15,9 @@ class LoginRequiredMiddleware:
                 "accounts/",  # allauth: login, signup, social
                 "static/",
                 "favicon.ico",
+                "manifest.json",     
+                "serviceworker.js",  
+                "offline",  
             )
             if path == "" or not any(path.startswith(p) for p in allowed_prefixes):
                 return redirect(settings.LOGIN_URL + "?next=" + request.get_full_path())
